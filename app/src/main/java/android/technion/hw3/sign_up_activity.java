@@ -1,0 +1,89 @@
+package android.technion.hw3;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class sign_up_activity extends AppCompatActivity {
+    private FirebaseAuth mAuth;
+    FirebaseFirestore db;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.sign_up_activity);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+    }
+
+    public void go_back_to_sign_in(View view){
+    final String email = ((EditText) findViewById(R.id.Email_2)).getText().toString();
+    final String password = ((EditText) findViewById(R.id.Password_2)).getText().toString();
+    mAuth.createUserWithEmailAndPassword(email, password)
+        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+//                    Toast.makeText(getApplicationContext(), "user registered successfully", Toast.LENGTH_SHORT).show();
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("email", email);
+                    user.put("password", password);
+                    db.collection("users")
+                            .add(user)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d(this.getClass().getName(), "DocumentSnapshot added with ID: " + documentReference.getId());
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(this.getClass().getName(), "Error adding document", e);
+                                }
+                            });
+                    finish();
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Toast.makeText(getApplicationContext(), "Invalid input. Try again.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+//    private void register_new_user(){
+//        EditText e = findViewById(R.id.Email_2);
+//        EditText p = findViewById(R.id.Password_2);
+//        String email = e.getText().toString();
+//        String password = p.getText().toString();
+//        if(email.isEmpty() || android.util.patterns.EMAIL_ADDRESS.matcher(email).match()){
+//            e.setError("Enter your Email please");
+//            e.requestFocus();
+//            return;
+//        }
+//        if(password.isEmpty()){
+//            e.setError("Enter your password please");
+//            e.requestFocus();
+//            return;
+//        }
+//
+//    }
+}

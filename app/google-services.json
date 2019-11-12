@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "659238634629",
+    "firebase_url": "https://androidhw3-e8b4a.firebaseio.com",
+    "project_id": "androidhw3-e8b4a",
+    "storage_bucket": "androidhw3-e8b4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659238634629:android:f7628b0a92083a7a1e55ec",
+        "android_client_info": {
+          "package_name": "android.technion.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "659238634629-uje5vr0a1aosb2dn0fsnfgos06242okk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABMe-YzpQM08g7pvGaG6CwPKKebWimmyQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "659238634629-uje5vr0a1aosb2dn0fsnfgos06242okk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

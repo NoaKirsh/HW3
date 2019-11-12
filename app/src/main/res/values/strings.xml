@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MyLists</string>
+    <string name="sign_in_heading">Login to MyLists</string>
+    <string name="Email">Email</string>
+    <string name="Password">Password</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="log_out">LOGOUT</string>
+    <string name="insert">INSERT</string>
+    <string name="create_an_account">CREATE AN ACCOUNT</string>
+    <string name="create_an_account_heading">Create an account</string>
+    <string name="unposted_comment">unposted comment</string>
+
+</resources>
