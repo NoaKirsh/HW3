@@ -9,6 +9,6 @@
     <string name="insert">INSERT</string>
     <string name="create_an_account">CREATE AN ACCOUNT</string>
     <string name="create_an_account_heading">Create an account</string>
-    <string name="unposted_comment">unposted comment</string>
+    <string name="unposted_comment">Type Item Description</string>
 
 </resources>

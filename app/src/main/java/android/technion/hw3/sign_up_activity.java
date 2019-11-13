@@ -47,11 +47,12 @@ public class sign_up_activity extends AppCompatActivity {
                     user.put("email", email);
                     user.put("password", password);
                     db.collection("users")
-                        .add(user)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        .document(mAuth.getCurrentUser().getUid())
+                        .set(user)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(this.getClass().getName(), "DocumentSnapshot added with ID: " + documentReference.getId());
+                            public void onSuccess(Void v) {
+                                Log.d(this.getClass().getName(), "DocumentSnapshot added with ID: ");
                                 mAuth.signOut();
                                 finish();
                             }

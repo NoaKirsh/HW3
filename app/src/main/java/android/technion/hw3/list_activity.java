@@ -31,7 +31,8 @@ public class list_activity extends AppCompatActivity {
     private ArrayList<String> arrayList;
     Costum_Array_Adapter customAdapter;
     private FirebaseAuth mAuth;
-    FirebaseFirestore db;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseUser curr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,23 +43,30 @@ public class list_activity extends AppCompatActivity {
         arrayList = new ArrayList<String>();
         customAdapter = new Costum_Array_Adapter(this, arrayList);
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        curr = FirebaseAuth.getInstance().getCurrentUser();
 
         insert_bottun = findViewById(R.id.insert);
         list.setAdapter(customAdapter);
     }
 
     public void on_insert(View v) {
-        final String item =((EditText) findViewById(R.id.new_item)).getText().toString();
-        if(item.isEmpty())
-            Toast.makeText(getApplicationContext(), "Item much not be empty", Toast.LENGTH_SHORT).show();
+        EditText i = findViewById(R.id.new_item);
+        final String item = (i).getText().toString();
+        if (item.isEmpty())
+            Toast.makeText(getApplicationContext(), "Item must not be empty", Toast.LENGTH_SHORT).show();
         else {
             customAdapter.add(item);
-            db.collection("users").document(mAuth.getCurrentUser().getUid())
-                    .collection("list")
-                    .add(item);
+            db.collection("users")
+                .document(mAuth.getCurrentUser().getUid())
+                .collection("list")
+                .add(new List_item(item));
+//            db.collection("users").document(mAuth.getCurrentUser().getUid())
+//                    .collection("list")
+
             Toast.makeText(this, "new item was added", Toast.LENGTH_SHORT).show();
+            i.getText().clear();
+        }
+    }
 //                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
 //                        @Override
 //                        public void onSuccess(DocumentReference documentReference) {
@@ -71,8 +79,8 @@ public class list_activity extends AppCompatActivity {
 //                            Log.w(this.getClass().getName(), "Error adding document", e);
 //                        }
 //                    });
-        }
-    }
+//       }
+//    }
 
     public void on_sign_out(View view) {
         mAuth.signOut();
