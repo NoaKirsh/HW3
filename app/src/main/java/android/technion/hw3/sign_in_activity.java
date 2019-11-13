@@ -22,9 +22,9 @@ public class sign_in_activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_activity);
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
     }
 
 //    @Override
@@ -50,21 +50,22 @@ public class sign_in_activity extends AppCompatActivity {
 
         String email = ((EditText) findViewById(R.id.Email)).getText().toString();
         String password = ((EditText) findViewById(R.id.Password)).getText().toString();
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-//                    Toast.makeText(getApplicationContext(), "user registered successfully", Toast.LENGTH_SHORT).show();
-//                            FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(i);
-                            finish();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(getApplicationContext(), "Invalid input. Try again.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+//        mAuth.createUserWithEmailAndPassword(email, password)
+////                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
+////                    @Override
+////                    public void onComplete(@NonNull Task<AuthResult> task) {
+////                        if (task.isSuccessful()) {
+////                            // Sign in success, update UI with the signed-in user's information
+////                            Toast.makeText(getApplicationContext(), "user registered successfully", Toast.LENGTH_SHORT).show();
+////                            startActivity(i);
+////                            finish();
+////                        } else {
+////                            // If sign in fails, display a message to the user.
+////                            Toast.makeText(getApplicationContext(), "Invalid input. Try again.", Toast.LENGTH_SHORT).show();
+////                        }
+////                    }
+////                });
+        startActivity(i);
+        finish();
     }
 }

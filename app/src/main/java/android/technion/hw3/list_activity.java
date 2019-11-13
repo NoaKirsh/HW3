@@ -22,7 +22,7 @@ public class list_activity extends AppCompatActivity {
     Button insert_bottun;
     private ArrayList<String> arrayList;
     Costum_Array_Adapter customAdapter;
-    private FirebaseAuth mAuth;
+//    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,16 +30,15 @@ public class list_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
         list = findViewById(R.id.myList);
-        arrayList = new ArrayList();
+        arrayList = new ArrayList<>();
         customAdapter = new Costum_Array_Adapter(this, arrayList);
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
+//        mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
 //        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         insert_bottun = findViewById(R.id.insert);
         list.setAdapter(customAdapter);
     }
-
 
     public void on_insert(View v) {
         EditText e = findViewById(R.id.new_item);
@@ -47,7 +46,7 @@ public class list_activity extends AppCompatActivity {
     }
 
     public void on_sign_out(View view) {
-        mAuth.signOut();
+//        mAuth.signOut();
         Intent i = new Intent(this, sign_in_activity.class);
         startActivity(i);
         finish();
