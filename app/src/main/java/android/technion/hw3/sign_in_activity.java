@@ -22,23 +22,21 @@ public class sign_in_activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_activity);
-//        mAuth = FirebaseAuth.getInstance();
-//        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
 //        FirebaseFirestore db = FirebaseFirestore.getInstance();
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if (currentUser != null) {
-//            final Intent i = new Intent(this, list_activity.class);
-//            startActivity(i);
-//            finish();
-//
-//        }
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            final Intent i = new Intent(this, list_activity.class);
+            startActivity(i);
+            finish();
+        }
+    }
 
     public void go_to_sign_up(View view){
         Intent i = new Intent(this, sign_up_activity.class);
@@ -47,25 +45,33 @@ public class sign_in_activity extends AppCompatActivity {
 
     public void go_to_list_activity(View view){
         final Intent i = new Intent(this, list_activity.class);
-
-        String email = ((EditText) findViewById(R.id.Email)).getText().toString();
+        EditText e = findViewById(R.id.Email);
+        String email = (e.getText().toString());
         String password = ((EditText) findViewById(R.id.Password)).getText().toString();
-//        mAuth.createUserWithEmailAndPassword(email, password)
-////                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
-////                    @Override
-////                    public void onComplete(@NonNull Task<AuthResult> task) {
-////                        if (task.isSuccessful()) {
-////                            // Sign in success, update UI with the signed-in user's information
-////                            Toast.makeText(getApplicationContext(), "user registered successfully", Toast.LENGTH_SHORT).show();
-////                            startActivity(i);
-////                            finish();
-////                        } else {
-////                            // If sign in fails, display a message to the user.
-////                            Toast.makeText(getApplicationContext(), "Invalid input. Try again.", Toast.LENGTH_SHORT).show();
-////                        }
-////                    }
-////                });
-        startActivity(i);
-        finish();
+        System.out.println("email is:" + email);
+        System.out.println("password is:" + password);
+        if(email.equals(""))
+            Toast.makeText(getApplicationContext(), "please insert your email", Toast.LENGTH_SHORT).show();
+        else if(password.equals(""))
+            Toast.makeText(getApplicationContext(), "please insert your password", Toast.LENGTH_SHORT).show();
+        else if(password.length() < 6)
+            Toast.makeText(getApplicationContext(), "password much have at least 6 characters", Toast.LENGTH_SHORT).show();
+        else {
+            mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Toast.makeText(getApplicationContext(), "authentication succeeded", Toast.LENGTH_SHORT).show();
+                        startActivity(i);
+                        finish();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(getApplicationContext(), "Invalid input. Try again.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 }

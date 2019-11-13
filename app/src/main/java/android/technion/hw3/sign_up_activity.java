@@ -23,14 +23,14 @@ import java.util.Map;
 
 public class sign_up_activity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-//    FirebaseFirestore db;
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_activity);
         mAuth = FirebaseAuth.getInstance();
-//        db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
     public void go_back_to_sign_in(View view){
@@ -42,25 +42,30 @@ public class sign_up_activity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     // Sign in success, update UI with the signed-in user's information
-//                    Toast.makeText(getApplicationContext(), "user registered successfully", Toast.LENGTH_SHORT).show();
-//                    Map<String, Object> user = new HashMap<>();
-//                    user.put("email", email);
-//                    user.put("password", password);
-//                    db.collection("users")
-//                            .add(user)
-//                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                @Override
-//                                public void onSuccess(DocumentReference documentReference) {
-//                                    Log.d(this.getClass().getName(), "DocumentSnapshot added with ID: " + documentReference.getId());
-//                                }
-//                            })
-//                            .addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Log.w(this.getClass().getName(), "Error adding document", e);
-//                                }
-//                            });
+                    Toast.makeText(getApplicationContext(), "user registered successfully", Toast.LENGTH_SHORT).show();
+                    Map<String, Object> user = new HashMap<>();
+                    user.put("email", email);
+                    user.put("password", password);
+                    db.collection("users")
+                        .add(user)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d(this.getClass().getName(), "DocumentSnapshot added with ID: " + documentReference.getId());
+                                mAuth.signOut();
+                                finish();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(this.getClass().getName(), "Error adding document", e);
+                            }
+                        });
+                    mAuth.signOut();
                     finish();
+                } else if(password.length() == 0 || password.length() < 6) {
+                    Toast.makeText(getApplicationContext(), "password much have at least 6 characters", Toast.LENGTH_SHORT).show();
                 } else {
                     // If sign in fails, display a message to the user.
                     Toast.makeText(getApplicationContext(), "Invalid input. Try again.", Toast.LENGTH_SHORT).show();
