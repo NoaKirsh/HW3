@@ -23,7 +23,7 @@ public class sign_in_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_activity);
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
+//        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
 //        FirebaseFirestore db = FirebaseFirestore.getInstance();
     }
 

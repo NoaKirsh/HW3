@@ -13,13 +13,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,13 +30,10 @@ import java.util.Map;
 //---------------------------------------------------------------------------------
 
 public class list_activity extends AppCompatActivity {
-//    ListView list;
     Button insert_bottun;
     private ArrayList<List_item> arrayList;
-    Costum_Array_Adapter customAdapter;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser curr;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -45,23 +44,25 @@ public class list_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
         mAuth = FirebaseAuth.getInstance();
-
-//        list = findViewById(R.id.myList);
-//        customAdapter = new Costum_Array_Adapter(this, arrayList);
-
-        arrayList = new ArrayList<>();
-        My_recycle_adapter my_recycle_adapter = new My_recycle_adapter(arrayList);
-
-        recyclerView = findViewById(R.id.my_recycler_view);
-
         insert_bottun = findViewById(R.id.insert);
-        recyclerView.setAdapter(my_recycle_adapter);
+        arrayList = new ArrayList<>();
+        do_all_the_firestore_stuff(savedInstanceState);
+    }
 
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView = findViewById(R.id.my_recycler_view);
-//        recyclerView.setHasFixedSize(true);
-//        mAdapter = new My_recycle_adapter(myDataset);
-//        recyclerView.setAdapter(customAdapter);
+    protected void do_all_the_firestore_stuff(Bundle savedInstanceState) {
+        Query query = FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(mAuth.getCurrentUser().getUid())
+                .collection("list")
+                .orderBy("text", Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<List_item> options = new FirestoreRecyclerOptions.Builder<List_item>()
+                .setQuery(query, List_item.class)
+                .build();
+        My_recycle_adapter my_recycle_adapter = new My_recycle_adapter(options);
+        recyclerView.setHasFixedSize(true);
+        recyclerView = findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(my_recycle_adapter);
     }
 
     public void on_insert(View v) {
@@ -70,7 +71,6 @@ public class list_activity extends AppCompatActivity {
             if (item.isEmpty())
                 Toast.makeText(getApplicationContext(), "Item must not be empty", Toast.LENGTH_SHORT).show();
             else {
-                customAdapter.add(item);
                 try {
                 db.collection("users")
                         .document(mAuth.getCurrentUser().getUid())

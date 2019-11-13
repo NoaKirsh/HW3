@@ -74,22 +74,4 @@ public class sign_up_activity extends AppCompatActivity {
             }
         });
     }
-
-//    private void register_new_user(){
-//        EditText e = findViewById(R.id.Email_2);
-//        EditText p = findViewById(R.id.Password_2);
-//        String email = e.getText().toString();
-//        String password = p.getText().toString();
-//        if(email.isEmpty() || android.util.patterns.EMAIL_ADDRESS.matcher(email).match()){
-//            e.setError("Enter your Email please");
-//            e.requestFocus();
-//            return;
-//        }
-//        if(password.isEmpty()){
-//            e.setError("Enter your password please");
-//            e.requestFocus();
-//            return;
-//        }
-//
-//    }
 }
