@@ -2,6 +2,8 @@ package android.technion.hw3;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.widget.Button;
@@ -26,46 +28,63 @@ import java.util.Map;
 //---------------------------------------------------------------------------------
 
 public class list_activity extends AppCompatActivity {
-    ListView list;
+//    ListView list;
     Button insert_bottun;
-    private ArrayList<String> arrayList;
+    private ArrayList<List_item> arrayList;
     Costum_Array_Adapter customAdapter;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseUser curr;
 
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_activity);
-        list = findViewById(R.id.myList);
-        arrayList = new ArrayList<String>();
-        customAdapter = new Costum_Array_Adapter(this, arrayList);
         mAuth = FirebaseAuth.getInstance();
-//        curr = FirebaseAuth.getInstance().getCurrentUser();
+
+//        list = findViewById(R.id.myList);
+//        customAdapter = new Costum_Array_Adapter(this, arrayList);
+
+        arrayList = new ArrayList<>();
+        My_recycle_adapter my_recycle_adapter = new My_recycle_adapter(arrayList);
+
+        recyclerView = findViewById(R.id.my_recycler_view);
 
         insert_bottun = findViewById(R.id.insert);
-        list.setAdapter(customAdapter);
+        recyclerView.setAdapter(my_recycle_adapter);
+
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView = findViewById(R.id.my_recycler_view);
+//        recyclerView.setHasFixedSize(true);
+//        mAdapter = new My_recycle_adapter(myDataset);
+//        recyclerView.setAdapter(customAdapter);
     }
 
     public void on_insert(View v) {
-        EditText i = findViewById(R.id.new_item);
-        final String item = (i).getText().toString();
-        if (item.isEmpty())
-            Toast.makeText(getApplicationContext(), "Item must not be empty", Toast.LENGTH_SHORT).show();
-        else {
-            customAdapter.add(item);
-            db.collection("users")
-                .document(mAuth.getCurrentUser().getUid())
-                .collection("list")
-                .add(new List_item(item));
+            EditText i = findViewById(R.id.new_item);
+            final String item = (i).getText().toString();
+            if (item.isEmpty())
+                Toast.makeText(getApplicationContext(), "Item must not be empty", Toast.LENGTH_SHORT).show();
+            else {
+                customAdapter.add(item);
+                try {
+                db.collection("users")
+                        .document(mAuth.getCurrentUser().getUid())
+                        .collection("list")
+                        .add(new List_item(item));
+                } catch (NullPointerException e) {
+                    System.out.print("NullPointerException caught");
+                }
 //            db.collection("users").document(mAuth.getCurrentUser().getUid())
 //                    .collection("list")
 
-            Toast.makeText(this, "new item was added", Toast.LENGTH_SHORT).show();
-            i.getText().clear();
-        }
+                Toast.makeText(this, "new item was added", Toast.LENGTH_SHORT).show();
+                i.getText().clear();
+            }
     }
 //                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
 //                        @Override

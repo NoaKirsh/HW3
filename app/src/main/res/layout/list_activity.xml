@@ -20,7 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/button_log_out"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_toLeftOf="@id/insert"
+        android:layout_toStartOf="@id/insert"
         android:hint="@string/unposted_comment"
         android:maxLines="0"
         android:inputType="text" />
@@ -31,14 +33,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/button_log_out"
         android:layout_alignParentRight="true"
-        android:text="insert"
+        android:layout_alignParentEnd="true"
+        android:text="@string/insert"
         android:onClick="on_insert"/>
 
-    <ListView
-        android:id="@+id/myList"
+<!--    <ListView-->
+<!--        android:id="@+id/myList"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_below="@id/new_item" />-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/new_item" />
+        android:layout_below="@id/new_item"/>
 
 </RelativeLayout>
 
