@@ -23,14 +23,14 @@ import java.util.Map;
 
 public class sign_up_activity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    FirebaseFirestore db;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_activity);
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+//        db = FirebaseFirestore.getInstance();
     }
 
     public void go_back_to_sign_in(View view){

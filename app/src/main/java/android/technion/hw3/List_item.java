@@ -1,20 +1,19 @@
 package android.technion.hw3;
 
 public class List_item {
-    private String text;
-    private String first_letter;
+    private String _text;
+//    private String _first_letter;
+
+    List_item(){
+    }
 
     public List_item(String text){
-        this.text = text;
-        this.first_letter = text.substring(0, 1);
+        this._text = text;
+//        this._first_letter = text.substring(0, 1);
     }
 
     public String get_text(){
-        return text;
-    }
-
-    public String get_first_letter(){
-        return first_letter;
+        return _text;
     }
 
 }

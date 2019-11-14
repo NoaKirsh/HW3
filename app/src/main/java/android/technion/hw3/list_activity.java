@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -33,17 +35,11 @@ import java.util.Map;
 public class list_activity extends AppCompatActivity {
 
     private My_recycle_adapter my_recycle_adapter;
-    private RecyclerView recyclerView;
+//    public RecyclerView recyclerView;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     Button insert_bottun;
-    private ArrayList<List_item> arrayList;
-
-
-
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +47,14 @@ public class list_activity extends AppCompatActivity {
         setContentView(R.layout.list_activity);
         mAuth = FirebaseAuth.getInstance();
         insert_bottun = findViewById(R.id.insert);
-        arrayList = new ArrayList<>();
+//        RecyclerView recyclerView = new RecyclerView(getApplicationContext());
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         do_all_the_firestore_stuff(savedInstanceState);
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         my_recycle_adapter.startListening();
     }
@@ -68,17 +66,25 @@ public class list_activity extends AppCompatActivity {
     }
 
     private void do_all_the_firestore_stuff(Bundle savedInstanceState) {
-        Query query = FirebaseFirestore.getInstance()
+        Query query = db
                 .collection("users")
                 .document(mAuth.getCurrentUser().getUid())
                 .collection("list")
-                .orderBy("text", Query.Direction.ASCENDING);
+                .orderBy("_text", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<List_item> options = new FirestoreRecyclerOptions.Builder<List_item>()
                 .setQuery(query, List_item.class)
                 .build();
+
         my_recycle_adapter = new My_recycle_adapter(options);
-        recyclerView = findViewById(R.id.my_recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
+
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(my_recycle_adapter);
     }
