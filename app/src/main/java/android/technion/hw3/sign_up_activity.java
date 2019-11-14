@@ -44,8 +44,8 @@ public class sign_up_activity extends AppCompatActivity {
                     // Sign in success, update UI with the signed-in user's information
                     Toast.makeText(getApplicationContext(), "user registered successfully", Toast.LENGTH_SHORT).show();
                     Map<String, Object> user = new HashMap<>();
-                    user.put("email", email);
-                    user.put("password", password);
+                    user.put("email", mAuth.getCurrentUser().getEmail());
+                    user.put("password",password);
                     db.collection("users")
                         .document(mAuth.getCurrentUser().getUid())
                         .set(user)

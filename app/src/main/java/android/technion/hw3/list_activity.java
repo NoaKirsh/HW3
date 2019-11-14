@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -30,12 +31,17 @@ import java.util.Map;
 //---------------------------------------------------------------------------------
 
 public class list_activity extends AppCompatActivity {
-    Button insert_bottun;
-    private ArrayList<List_item> arrayList;
+
+    private My_recycle_adapter my_recycle_adapter;
+    private RecyclerView recyclerView;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private RecyclerView recyclerView;
+    Button insert_bottun;
+    private ArrayList<List_item> arrayList;
+
+
+
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
@@ -49,7 +55,19 @@ public class list_activity extends AppCompatActivity {
         do_all_the_firestore_stuff(savedInstanceState);
     }
 
-    protected void do_all_the_firestore_stuff(Bundle savedInstanceState) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        my_recycle_adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        my_recycle_adapter.stopListening();
+    }
+
+    private void do_all_the_firestore_stuff(Bundle savedInstanceState) {
         Query query = FirebaseFirestore.getInstance()
                 .collection("users")
                 .document(mAuth.getCurrentUser().getUid())
@@ -58,48 +76,39 @@ public class list_activity extends AppCompatActivity {
         FirestoreRecyclerOptions<List_item> options = new FirestoreRecyclerOptions.Builder<List_item>()
                 .setQuery(query, List_item.class)
                 .build();
-        My_recycle_adapter my_recycle_adapter = new My_recycle_adapter(options);
-        recyclerView.setHasFixedSize(true);
+        my_recycle_adapter = new My_recycle_adapter(options);
         recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(my_recycle_adapter);
     }
 
     public void on_insert(View v) {
-            EditText i = findViewById(R.id.new_item);
-            final String item = (i).getText().toString();
-            if (item.isEmpty())
-                Toast.makeText(getApplicationContext(), "Item must not be empty", Toast.LENGTH_SHORT).show();
-            else {
-                try {
+        EditText i = findViewById(R.id.new_item);
+        final String item = (i).getText().toString();
+        if (item.isEmpty())
+            Toast.makeText(getApplicationContext(), "Item must not be empty", Toast.LENGTH_SHORT).show();
+        else {
                 db.collection("users")
-                        .document(mAuth.getCurrentUser().getUid())
-                        .collection("list")
-                        .add(new List_item(item));
-                } catch (NullPointerException e) {
-                    System.out.print("NullPointerException caught");
-                }
-//            db.collection("users").document(mAuth.getCurrentUser().getUid())
-//                    .collection("list")
-
-                Toast.makeText(this, "new item was added", Toast.LENGTH_SHORT).show();
-                i.getText().clear();
+                    .document(mAuth.getCurrentUser().getUid())
+                    .collection("list")
+                    .add(new List_item(item))
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(this.getClass().getName(), "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(this.getClass().getName(), "Error adding document", e);
+                    }
+                });
             }
-    }
-//                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                        @Override
-//                        public void onSuccess(DocumentReference documentReference) {
-//                            Log.d(this.getClass().getName(), "DocumentSnapshot added with ID: " + documentReference.getId());
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Log.w(this.getClass().getName(), "Error adding document", e);
-//                        }
-//                    });
-//       }
-//    }
+            Toast.makeText(this, "new item was added", Toast.LENGTH_SHORT).show();
+            i.getText().clear();
+        }
 
     public void on_sign_out(View view) {
         mAuth.signOut();

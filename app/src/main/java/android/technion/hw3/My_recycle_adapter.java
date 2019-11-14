@@ -23,8 +23,8 @@ public class My_recycle_adapter extends FirestoreRecyclerAdapter<List_item, My_r
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        TextView my_view  = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row, parent, true);
+        TextView my_view = (TextView) LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.row, parent, false);
         return new MyViewHolder(my_view);
     }
 
