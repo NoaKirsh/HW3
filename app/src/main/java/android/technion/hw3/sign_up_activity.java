@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,15 +23,35 @@ import java.util.Map;
 public class sign_up_activity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    Button sign_up_button;
+    EditText email_button;
+    EditText password_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_activity);
         mAuth = FirebaseAuth.getInstance();
+        sign_up_button = findViewById(R.id.button_sign_up);
+        email_button = findViewById(R.id.Email_2);
+        password_button = findViewById(R.id.Password_2);
+    }
+
+    void disableViews() {
+        sign_up_button.setEnabled(false);
+        email_button.setEnabled(false);
+        password_button.setEnabled(false);
+
+    }
+
+    void enableViews() {
+        sign_up_button.setEnabled(true);
+        email_button.setEnabled(true);
+        password_button.setEnabled(true);
     }
 
     public void go_back_to_sign_in(View view) {
+        disableViews();
         final String email = ((EditText) findViewById(R.id.Email_2)).getText().toString();
         final String password = ((EditText) findViewById(R.id.Password_2)).getText().toString();
         if (email.length() == 0 || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -57,6 +78,7 @@ public class sign_up_activity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void v) {
                                             Log.d(this.getClass().getName(), "Document added");
+                                            enableViews();
                                             mAuth.signOut();
                                             finish();
                                         }
@@ -65,6 +87,7 @@ public class sign_up_activity extends AppCompatActivity {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             Log.w(this.getClass().getName(), "Error adding document", e);
+                                            enableViews();
                                         }
                                     });
                             mAuth.signOut();
