@@ -51,7 +51,6 @@ public class sign_up_activity extends AppCompatActivity {
     }
 
     public void go_back_to_sign_in(View view) {
-        disableViews();
         final String email = ((EditText) findViewById(R.id.Email_2)).getText().toString();
         final String password = ((EditText) findViewById(R.id.Password_2)).getText().toString();
         if (email.length() == 0 || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -61,13 +60,13 @@ public class sign_up_activity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "password must have at least 6 characters", Toast.LENGTH_SHORT).show();
 
         } else {
+            disableViews();
             mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            //                    Toast.makeText(getApplicationContext(), "user registered successfully", Toast.LENGTH_SHORT).show();
                             Map<String, Object> user = new HashMap<>();
                             user.put("email", mAuth.getCurrentUser().getEmail());
                             //                    user.put("password",password);
@@ -93,7 +92,7 @@ public class sign_up_activity extends AppCompatActivity {
                             mAuth.signOut();
                             finish();
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If the sign in fails, display a message to the user.
                             Toast.makeText(getApplicationContext(), "Invalid input. Try again.", Toast.LENGTH_SHORT).show();
                         }
                     }

@@ -40,22 +40,21 @@ public class list_activity extends AppCompatActivity {
         insert_bottun = findViewById(R.id.insert);
         new_item_bottun = findViewById(R.id.new_item);
         logout_bottun = findViewById(R.id.button_log_out);
-
         Query query = db
-                .collection("users")
-                .document(mAuth.getCurrentUser().getUid())
-                .collection("list")
-                .orderBy("_text", Query.Direction.ASCENDING);
+                    .collection("users")
+                    .document(mAuth.getCurrentUser().getUid())
+                    .collection("list")
+                    .orderBy("_text", Query.Direction.ASCENDING);
         FirestoreRecyclerOptions<List_item> options = new FirestoreRecyclerOptions.Builder<List_item>()
                 .setQuery(query, List_item.class)
                 .build();
-
         my_recycle_adapter = new My_recycle_adapter(options);
         RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(my_recycle_adapter);
         recyclerView.setHasFixedSize(true);
     }
+
 
     @Override
     public void onStart() {

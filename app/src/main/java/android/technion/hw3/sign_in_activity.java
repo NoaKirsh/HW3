@@ -66,7 +66,6 @@ public class sign_in_activity extends AppCompatActivity {
     }
 
     public void go_to_list_activity(View view){
-        disableViews();
         final Intent i = new Intent(this, list_activity.class);
         EditText e = findViewById(R.id.Email);
         String email = (e.getText().toString());
@@ -78,6 +77,7 @@ public class sign_in_activity extends AppCompatActivity {
         else if(password.length() < 6)
             Toast.makeText(getApplicationContext(), "password much have at least 6 characters", Toast.LENGTH_SHORT).show();
         else {
+            disableViews();
             mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
@@ -90,7 +90,7 @@ public class sign_in_activity extends AppCompatActivity {
                         startActivity(i);
                         finish();
                     } else {
-                        // If sign in fails, display a message to the user.
+                        // If the sign in fails, display a message to the user.
                         Log.d(this.getClass().getName(), "signInUserWithEmail:fail", task.getException());
                         enableViews();
                         Toast.makeText(getApplicationContext(), "Invalid input. Try again.", Toast.LENGTH_SHORT).show();
