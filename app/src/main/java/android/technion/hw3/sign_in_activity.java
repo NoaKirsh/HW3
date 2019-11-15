@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -13,7 +14,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class sign_in_activity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -23,8 +23,6 @@ public class sign_in_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_activity);
         mAuth = FirebaseAuth.getInstance();
-//        FirebaseUser curr = FirebaseAuth.getInstance().getCurrentUser();
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -48,8 +46,6 @@ public class sign_in_activity extends AppCompatActivity {
         EditText e = findViewById(R.id.Email);
         String email = (e.getText().toString());
         String password = ((EditText) findViewById(R.id.Password)).getText().toString();
-        System.out.println("email is:" + email);
-        System.out.println("password is:" + password);
         if(email.equals(""))
             Toast.makeText(getApplicationContext(), "please insert your email", Toast.LENGTH_SHORT).show();
         else if(password.equals(""))
@@ -64,10 +60,12 @@ public class sign_in_activity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Toast.makeText(getApplicationContext(), "authentication succeeded", Toast.LENGTH_SHORT).show();
+                        Log.d(this.getClass().getName(), "signInUserWithEmail:success");
                         startActivity(i);
                         finish();
                     } else {
                         // If sign in fails, display a message to the user.
+                        Log.d(this.getClass().getName(), "signInUserWithEmail:fail", task.getException());
                         Toast.makeText(getApplicationContext(), "Invalid input. Try again.", Toast.LENGTH_SHORT).show();
                     }
                 }

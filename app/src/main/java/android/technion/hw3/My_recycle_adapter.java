@@ -33,7 +33,6 @@ public class My_recycle_adapter extends FirestoreRecyclerAdapter<List_item, My_r
         viewHolder.first_letter.setText(l.get_text().substring(0, 1));
     }
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView item;
         TextView first_letter;

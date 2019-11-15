@@ -6,11 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,28 +15,22 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 //---------------------------------------------------------------------------------
 
 public class list_activity extends AppCompatActivity {
 
     private My_recycle_adapter my_recycle_adapter;
-//    public RecyclerView recyclerView;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     Button insert_bottun;
+    Button logout_bottun;
+    EditText new_item_bottun;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +38,23 @@ public class list_activity extends AppCompatActivity {
         setContentView(R.layout.list_activity);
         mAuth = FirebaseAuth.getInstance();
         insert_bottun = findViewById(R.id.insert);
-//        RecyclerView recyclerView = new RecyclerView(getApplicationContext());
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-//        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        do_all_the_firestore_stuff(savedInstanceState);
+        new_item_bottun = findViewById(R.id.new_item);
+        logout_bottun = findViewById(R.id.button_log_out);
+
+        Query query = db
+                .collection("users")
+                .document(mAuth.getCurrentUser().getUid())
+                .collection("list")
+                .orderBy("_text", Query.Direction.ASCENDING);
+        FirestoreRecyclerOptions<List_item> options = new FirestoreRecyclerOptions.Builder<List_item>()
+                .setQuery(query, List_item.class)
+                .build();
+
+        my_recycle_adapter = new My_recycle_adapter(options);
+        RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(my_recycle_adapter);
+        recyclerView.setHasFixedSize(true);
     }
 
     @Override
@@ -65,31 +69,21 @@ public class list_activity extends AppCompatActivity {
         my_recycle_adapter.stopListening();
     }
 
-    private void do_all_the_firestore_stuff(Bundle savedInstanceState) {
-        Query query = db
-                .collection("users")
-                .document(mAuth.getCurrentUser().getUid())
-                .collection("list")
-                .orderBy("_text", Query.Direction.ASCENDING);
-        FirestoreRecyclerOptions<List_item> options = new FirestoreRecyclerOptions.Builder<List_item>()
-                .setQuery(query, List_item.class)
-                .build();
+    void disableViews() {
+        logout_bottun.setEnabled(false);
+        insert_bottun.setEnabled(false);
+        new_item_bottun.setEnabled(false);
 
-        my_recycle_adapter = new My_recycle_adapter(options);
-        RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
+    }
 
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(my_recycle_adapter);
+    void enableViews() {
+        logout_bottun.setEnabled(true);
+        insert_bottun.setEnabled(true);
+        new_item_bottun.setEnabled(true);
     }
 
     public void on_insert(View v) {
+        disableViews();
         EditText i = findViewById(R.id.new_item);
         final String item = (i).getText().toString();
         if (item.isEmpty())
@@ -103,14 +97,16 @@ public class list_activity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(this.getClass().getName(), "DocumentSnapshot added with ID: " + documentReference.getId());
+                        enableViews();
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(this.getClass().getName(), "Error adding document", e);
-                    }
-                });
+                        enableViews();
+                        }
+                    });
             }
             Toast.makeText(this, "new item was added", Toast.LENGTH_SHORT).show();
             i.getText().clear();
